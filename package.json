@@ -1,0 +1,30 @@
+{
+  "name": "ha-chore-card",
+  "version": "0.0.1",
+  "description": "UI card and feature for chore helper for Home Assistant",
+  "main": "index.js",
+  "scripts": {
+    "start": "rollup -c rollup.config.dev.js --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vhonchar",
+  "license": "ISC",
+  "dependencies": {
+    "@home-assistant/frontend": "file:../frontend",
+    "@material/web": "^2.3.0",
+    "home-assistant-js-websocket": "^9.4.0",
+    "lit": "^3.3.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^2.58.0",
+    "rollup-plugin-esbuild": "^6.2.1",
+    "rollup-plugin-serve": "^3.0.0",
+    "typescript": "^5.8.3"
+  },
+  "packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538"
+}

@@ -1,0 +1,46 @@
+{
+  "name": "ha-frontend-dev",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "postCreateCommand": ".devcontainer/post_create.sh",
+  "forwardPorts": [5000],
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/ha-chore-card,type=bind",
+  "workspaceFolder": "/workspace/ha-chore-card",
+  "mounts": [
+    "source=${env:USERPROFILE}\\.gitconfig,target=/home/root/.gitconfig,type=bind"
+  ],
+  "remoteEnv": {
+    "NODE_OPTIONS": "--max_old_space_size=1024"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next",
+        "runem.lit-plugin"
+      ],
+      "settings": {
+        "files.eol": "\n",
+        "editor.tabSize": 2,
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.renderWhitespace": "none",
+        "editor.rulers": [80],
+        "[typescript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[javascript]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "files.trimTrailingWhitespace": true,
+        "terminal.integrated.shell.linux": "/usr/bin/zsh",
+        "gitlens.showWelcomeOnInstall": false,
+        "gitlens.showWhatsNewAfterUpgrades": false,
+        "workbench.startupEditor": "none"
+      }
+    }
+  }
+}
