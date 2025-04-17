@@ -68,4 +68,5 @@ class ChoreIncrementButtonEditor extends BaseEditor<ChoreIncrementButtonConfig> 
 export interface ChoreIncrementButtonConfig extends LovelaceCardConfig {
   increment?: string;
   name?: string;
+  icon?: string;
 }
