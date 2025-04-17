@@ -19,7 +19,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "ms-vscode.vscode-typescript-next",
-        "runem.lit-plugin"
+        "runem.lit-plugin",
+        "lit-plugin"
       ],
       "settings": {
         "files.eol": "\n",
