@@ -4,11 +4,6 @@ import { customElement, property, state } from 'lit/decorators.js';
 import './chore-progress-editor';
 import { ChoreProgressConfig } from './chore-progress-editor';
 
-const supportsChoreProgressBar = (stateObj, ...anythingElse) => {
-  console.log(anythingElse);
-  return stateObj.attributes.chore_integration === true;
-};
-
 @customElement('chore-progress')
 class ChoreProgress extends LitElement {
   static styles = css`
@@ -69,7 +64,7 @@ class ChoreProgress extends LitElement {
       return null;
     }
 
-    const progress = Math.min(1, this.stateObj.attributes.counter_state / this.stateObj.attributes.limit);
+    const progress = isScheduledChore(this.stateObj) ? calculateSheduledChoreProgress(this.stateObj) : calculateCounterChoreProgress(this.stateObj);
     const statusClass = progress >= 1 ? 'overdue' : progress > 0.8 ? 'warning' : 'good';
     const heightMultiplier = this.config.enableLarge ? 1 : 0.3;
 
@@ -86,6 +81,38 @@ class ChoreProgress extends LitElement {
     `;
   }
 }
+
+const supportsChoreProgressBar = (stateObj) => {
+  return stateObj.attributes.chore_integration === true;
+};
+
+interface ScheduledChoreEntity {
+  attributes: {
+    next_due_date: string;
+    start_from: string;
+  };
+}
+const isScheduledChore = (obj: any): obj is ScheduledChoreEntity => {
+  return obj.attributes.next_due_date;
+};
+
+const calculateSheduledChoreProgress = (scheduledChore: ScheduledChoreEntity) => {
+  const today = new Date();
+  const start = new Date(scheduledChore.attributes.start_from);
+  const due = new Date(scheduledChore.attributes.next_due_date);
+
+  if (due <= start) return 1;
+
+  const total = due.getTime() - start.getTime();
+  const elapsed = today.getTime() - start.getTime();
+
+  const rawProgress = elapsed / total;
+  return Math.min(1, Math.max(0, rawProgress));
+};
+
+const calculateCounterChoreProgress = (entity: any) => {
+  return Math.min(1, entity.attributes.counter_state / entity.attributes.limit);
+};
 
 window.customCardFeatures = window.customCardFeatures || [];
 window.customCardFeatures.push({

@@ -6,9 +6,8 @@ import { BaseCard } from '../base-card';
 import { ChoreIncrementButtonConfig } from './chore-increment-button-editor';
 import './chore-increment-button-editor';
 
-const supportsChoreIncrementButton = (stateObj, ...anythingElse) => {
-  console.log(anythingElse);
-  return stateObj.attributes.chore_integration === true;
+const supportsChoreIncrementButton = (stateObj) => {
+  return stateObj.attributes.chore_integration === true && stateObj.attributes.counter_state;
 };
 
 @customElement('chore-increment-button')
