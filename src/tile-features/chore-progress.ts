@@ -1,8 +1,6 @@
 import { HomeAssistant } from '@home-assistant/frontend/src/types';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-
-import '@material/web/progress/linear-progress.js';
 import './chore-progress-editor';
 import { ChoreProgressConfig } from './chore-progress-editor';
 
@@ -14,24 +12,31 @@ const supportsChoreProgressBar = (stateObj, ...anythingElse) => {
 @customElement('chore-progress')
 class ChoreProgress extends LitElement {
   static styles = css`
-    md-linear-progress {
+    .bar-container {
       width: 100%;
-      --md-linear-progress-track-color: var(--primary-background-color, #fff);
-      --md-linear-progress-track-height: calc(var(--feature-height, 36px) * var(--height-multiplier));
-      --md-linear-progress-track-shape: calc(var(--feature-height, 36px) * var(--height-multiplier));
-      --md-linear-progress-active-indicator-height: calc(var(--feature-height, 36px) * var(--height-multiplier));
+      height: calc(var(--feature-height, 36px) * var(--height-multiplier));
+      background-color: var(--primary-background-color, #222);
+      border-radius: calc(var(--feature-height, 36px) * var(--height-multiplier));
+      overflow: hidden;
+      display: flex;
     }
 
-    md-linear-progress.good {
-      --md-linear-progress-active-indicator-color: var(--success-color);
+    .bar-fill {
+      height: 100%;
+      border-radius: inherit;
+      transition: width 0.3s ease;
     }
 
-    md-linear-progress.warning {
-      --md-linear-progress-active-indicator-color: var(--warning-color);
+    .bar-fill.good {
+      background-color: var(--success-color, #4caf50);
     }
 
-    md-linear-progress.overdue {
-      --md-linear-progress-active-indicator-color: var(--error-color);
+    .bar-fill.warning {
+      background-color: var(--warning-color, #f9a825);
+    }
+
+    .bar-fill.overdue {
+      background-color: var(--error-color, #f44336);
     }
   `;
 
@@ -59,29 +64,25 @@ class ChoreProgress extends LitElement {
     this.config = config;
   }
 
-  _press(ev: Event) {
-    ev.stopPropagation();
-    this.hass.callService('button', 'press', {
-      entity_id: this.stateObj.entity_id,
-    });
-  }
-
   render() {
     if (!supportsChoreProgressBar(this.stateObj)) {
       return null;
     }
+
     const progress = Math.min(1, this.stateObj.attributes.counter_state / this.stateObj.attributes.limit);
     const statusClass = progress >= 1 ? 'overdue' : progress > 0.8 ? 'warning' : 'good';
     const heightMultiplier = this.config.enableLarge ? 1 : 0.3;
 
     return html`
-      <md-linear-progress
-        style="--height-multiplier: ${heightMultiplier}"
-        class="${statusClass}"
-        .value="${progress}"
-        .indeterminate="${false}"
+      <div
+        class="bar-container"
+        style="--height-multiplier: ${heightMultiplier};"
       >
-      </md-linear-progress>
+        <div
+          class="bar-fill ${statusClass}"
+          style="width: ${progress * 100}%"
+        ></div>
+      </div>
     `;
   }
 }
