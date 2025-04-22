@@ -1,0 +1,12 @@
+import { HassEntity, HassEntityAttributeBase } from 'home-assistant-js-websocket';
+
+export interface ScheduledChoreEntity extends HassEntity {
+  attributes: HassEntityAttributeBase & {
+    last_completion_date: string;
+    next_due_date: string;
+  };
+}
+
+export const isScheduledChore = (obj: any): obj is ScheduledChoreEntity => {
+  return obj.attributes.next_due_date;
+};

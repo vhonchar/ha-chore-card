@@ -6,7 +6,7 @@ export abstract class BaseEditor<T extends LovelaceCardConfig> extends BaseCard<
     if (!this.config || !this.hass) return;
 
     const target = ev.target as any;
-    const value = ev.detail?.value !== undefined ? ev.detail?.value : target.value;
+    const value = ev.detail?.value;
     const field = target.name;
 
     if (this.config[field] === value) return;

@@ -1,67 +1,105 @@
-import { HomeAssistant } from "@home-assistant/frontend/src/types";
-import { html, LitElement, css } from "lit";
-import { customElement, property, state } from "lit/decorators.js";
+import { html, css, TemplateResult } from 'lit';
+import { customElement } from 'lit/decorators.js';
+import { BaseEditor } from '../base-editor';
+import { LovelaceCardConfig } from '@home-assistant/frontend/src/data/lovelace/config/card';
+import { Selector } from '@home-assistant/frontend/src/data/selector';
 
-@customElement("chore-card-editor")
-class ContentCardEditor extends LitElement {
+export interface ChoreCardConfig extends LovelaceCardConfig {
+  entity?: string;
+  name?: string;
+  icon?: string;
+  attributesToDisplay?: string | string[];
+  largerProgressBar?: boolean;
+}
+
+@customElement('chore-card-editor')
+export class ChoreCardEditor extends BaseEditor<ChoreCardConfig> {
   static styles = css`
-    ha-textfield,
-    ha-entity-picker {
+    .row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .row ha-selector {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    ha-selector:not([helper]):not(:last-child):not(.row ha-selector) {
       display: block;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    ha-selector[helper]:not(:last-child):not(.row ha-selector) {
+      display: block;
+      margin-bottom: 8px;
     }
   `;
 
-  @property({ attribute: false }) public hass?: HomeAssistant;
-  @state() private _config?: any;
-
-  setConfig(config) {
-    this._config = config;
-  }
-
-  render() {
-    if (!this.hass || !this._config) return html``;
-
+  renderBody(): TemplateResult {
     return html`
       <ha-selector
+        label="Entity"
+        .required=${true}
         .hass=${this.hass}
         .selector=${{
           entity: {
-            domain: ["sensor"],
-            integration: "chore",
+            domain: ['sensor'],
+            integration: 'chore',
           },
         }}
-        value=${this._config.entity || ""}
+        value=${this.config.entity || ''}
         name="entity"
         @value-changed=${this._valueChanged}
       ></ha-selector>
+
+      <div class="row">
+        <ha-selector
+          label="Name"
+          .required=${false}
+          helper="Name of the entity"
+          .hass=${this.hass}
+          .selector=${{ text: { type: 'text' } } as Selector}
+          .value=${this.config.name}
+          name="name"
+          @value-changed=${this._valueChanged}
+        ></ha-selector>
+
+        <ha-selector
+          label="Icon"
+          .required=${false}
+          .hass=${this.hass}
+          .selector=${{ icon: { fallbackPath: 'mdi:lightning-bolt' } }}
+          .value=${this.config.icon}
+          name="icon"
+          @value-changed=${this._valueChanged}
+        ></ha-selector>
+      </div>
+      <ha-selector
+        label="State content"
+        .required=${false}
+        .hass=${this.hass}
+        .selector=${{
+          ui_state_content: {
+            entity_id: this.config.entity,
+            allow_name: true,
+          },
+        }}
+        .value=${this.config.attributesToDisplay}
+        name="attributesToDisplay"
+        @value-changed=${this._valueChanged}
+      ></ha-selector>
+      <ha-selector
+        label="Larger progress bar"
+        .hass="${this.hass}"
+        .selector="${{
+          boolean: {},
+        }}"
+        .value="${this.config.largerProgressBar}"
+        .name="${'largerProgressBar'}"
+        @value-changed="${this._valueChanged}"
+      ></ha-selector>
     `;
-  }
-
-  private _valueChanged(ev: Event) {
-    if (!this._config || !this.hass) return;
-
-    const target = ev.target as any;
-    const value = (ev as any).detail?.value || target.value;
-    const field = target.name;
-
-    if (this._config[field] === value) return;
-
-    this._config = {
-      ...this._config,
-      [field]: value,
-    };
-
-    this._bubleChanges(this._config);
-  }
-
-  private _bubleChanges(newConfig) {
-    this.dispatchEvent(
-      new CustomEvent("config-changed", {
-        detail: { config: newConfig },
-        bubbles: true,
-        composed: true,
-      })
-    );
   }
 }

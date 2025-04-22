@@ -7,7 +7,7 @@ import { ChoreIncrementButtonConfig } from './chore-increment-button-editor';
 import './chore-increment-button-editor';
 
 const supportsChoreIncrementButton = (stateObj) => {
-  return stateObj.attributes.chore_integration === true && stateObj.attributes.counter_state;
+  return stateObj.attributes.chore_integration === true && stateObj.attributes.counter_state !== undefined;
 };
 
 @customElement('chore-increment-button')
