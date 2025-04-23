@@ -28,7 +28,6 @@ export class ChoreProgress extends LitElement {
     }
 
     .bar-fill {
-      height: 100%;
       border-radius: inherit;
       transition: width 0.3s ease;
     }

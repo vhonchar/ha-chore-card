@@ -76,10 +76,6 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
     .progress-container.large {
       height: 13px;
     }
-
-    .slim .progress-container {
-      padding: 0px 12px;
-    }
   `;
 
   static getStubConfig(hass: HomeAssistant) {
