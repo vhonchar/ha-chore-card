@@ -6,55 +6,54 @@ import { ScheduledChoreEntity } from '../type';
 import { ChoreCardConfig } from './editor';
 import { HomeAssistant } from '@home-assistant/frontend/src/types';
 import './editor';
+import { fireEvent } from '@home-assistant/frontend/src/common/dom/fire_event';
 
 @customElement('chore-card')
 export class ChoreCard extends BaseCard<ChoreCardConfig> {
   static styles = css`
     :host {
       --icon-color: var(--state-icon-color);
-      --button-border-color: #0097fb;
-      --button-text-color: #0097fb;
     }
 
     ha-card {
       height: 100%;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
       border-radius: var(--ha-card-border-radius, 12px);
       box-sizing: border-box;
       color: var(--primary-text-color);
       background: var(--card-background-color, white);
-      padding: 10px;
-    }
-
-    ha-card.slim {
-      padding: 7px;
     }
 
     .card-root {
       display: flex;
       flex-direction: column;
       height: 100%;
+      cursor: pointer;
     }
 
     .header {
       flex: 1;
+      width: 100%;
+      padding: 10px;
       display: flex;
       align-items: center;
-      width: 100%;
+      gap: 10px;
+      justify-content: space-between;
+    }
+
+    .slim .header {
+      padding: 5px 10px;
     }
 
     .icon {
       color: var(--icon-color);
-      margin-right: 16px;
       --mdc-icon-size: 24px;
+      padding: 6px;
     }
 
     .info {
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
+      flex: 1;
     }
 
     .title {
@@ -73,42 +72,8 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
       color: var(--primary-text-color);
     }
 
-    .buttons-container {
-      display: flex;
-      gap: 8px;
-    }
-
-    .button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 36px;
-      border-radius: var(--ha-card-border-radius, 12px);
-      border: 1px solid var(--button-border-color);
-      color: var(--button-text-color);
-      background: transparent;
-      font-weight: 500;
-      cursor: pointer;
-      font-size: 0.9rem;
-      padding: 0 12px;
-      gap: 4px;
-      transition: background-color 0.2s ease;
-    }
-
-    .button:hover {
-      background-color: rgba(0, 151, 251, 0.1);
-    }
-
-    .button:active {
-      background-color: rgba(0, 151, 251, 0.2);
-    }
-
-    .button ha-icon {
-      --mdc-icon-size: 18px;
-    }
-
     .progress-container {
-      margin-top: 10px;
+      padding: 0px 12px 12px 12px;
       height: 4px;
     }
 
@@ -117,7 +82,7 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
     }
 
     .slim .progress-container {
-      margin: 8px 4px;
+      padding: 0px 12px;
     }
   `;
 
@@ -163,7 +128,12 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
 
     return html`
       <ha-card class="${slim ? 'slim' : ''}">
-        <div class="card-root">
+        <div
+          class="card-root"
+          @click=${() => fireEvent(this, 'hass-more-info', { entityId: entity.entity_id })}
+          role="button"
+        >
+          <ha-ripple></ha-ripple>
           <div class="header">
             <ha-icon
               class="icon"
@@ -174,35 +144,13 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
               <div class="title">${name}</div>
               <div class="state">${state}</div>
             </div>
-
-            <div class="buttons-container">
-              ${this.config.show_add_button
-                ? html`
-                    <button
-                      class="button"
-                      @click=${this._handleIncrement}
-                    >
-                      <ha-icon icon="${this.config.add_icon}"></ha-icon>
-                      ${this.config.add_button_text}
-                    </button>
-                  `
-                : ''}
-              ${this.config.show_remove_button
-                ? html`
-                    <button
-                      class="button"
-                      @click=${this._handleDecrement}
-                    >
-                      <ha-icon icon="${this.config.remove_icon}"></ha-icon>
-                      ${this.config.remove_button_text}
-                    </button>
-                  `
-                : ''}
-            </div>
           </div>
 
           <div class="progress-container ${this.config.largerProgressBar ? 'large' : ''}">
-            <chore-progress .chore=${entity}></chore-progress>
+            <chore-progress
+              .chore=${entity}
+              minFillment="2"
+            ></chore-progress>
           </div>
         </div>
       </ha-card>

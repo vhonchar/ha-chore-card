@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import { isScheduledChore, ScheduledChoreEntity } from '../type';
+import { CounterChoreEntity, isScheduledChore, ScheduledChoreEntity } from '../type';
 
 /**
  * A reusable progress bar component.
@@ -40,21 +40,13 @@ export class ChoreProgress extends LitElement {
     }
   `;
 
-  /**
-   * Chore entity
-   */
-  @property({ attribute: false }) chore!: ScheduledChoreEntity;
-
-  /**
-   * Enable animation for width transitions
-   */
+  @property({ attribute: false }) chore!: ScheduledChoreEntity | CounterChoreEntity;
   @property({ type: Boolean }) animated = true;
+  @property({ type: Number }) minFillment = 2;
 
   render() {
-    // Ensure progress is between 0 and 1
-
     const progress = isScheduledChore(this.chore) ? calculateSheduledChoreProgress(this.chore) : calculateCounterChoreProgress(this.chore);
-    const widthPercentage = progress * 100;
+    const widthPercentage = Math.max(this.minFillment, progress * 100);
     const statusClass = progress >= 1 ? 'overdue' : progress > 0.8 ? 'warning' : 'good';
 
     // Transition styles for animation control
@@ -88,7 +80,7 @@ const calculateSheduledChoreProgress = (scheduledChore: ScheduledChoreEntity) =>
   return Math.min(1, Math.max(0, rawProgress));
 };
 
-const calculateCounterChoreProgress = (entity: any) => {
+const calculateCounterChoreProgress = (entity: CounterChoreEntity) => {
   return Math.min(1, entity.attributes.counter_state / entity.attributes.limit);
 };
 

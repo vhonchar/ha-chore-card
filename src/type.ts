@@ -7,6 +7,13 @@ export interface ScheduledChoreEntity extends HassEntity {
   };
 }
 
+export interface CounterChoreEntity extends HassEntity {
+  attributes: HassEntityAttributeBase & {
+    counter_state: number;
+    limit: number;
+  };
+}
+
 export const isScheduledChore = (obj: any): obj is ScheduledChoreEntity => {
   return obj.attributes.next_due_date;
 };
