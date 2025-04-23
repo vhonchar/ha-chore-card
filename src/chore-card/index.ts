@@ -11,10 +11,6 @@ import { fireEvent, ValidHassDomEvent } from '@home-assistant/frontend/src/commo
 @customElement('chore-card')
 export class ChoreCard extends BaseCard<ChoreCardConfig> {
   static styles = css`
-    :host {
-      --icon-color: var(--state-icon-color);
-    }
-
     ha-card {
       height: 100%;
       border-radius: var(--ha-card-border-radius, 12px);
@@ -45,7 +41,7 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
     }
 
     .icon {
-      color: var(--icon-color);
+      color: var(--state-icon-color);
       --mdc-icon-size: 24px;
       padding: 6px;
     }
@@ -150,6 +146,7 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
             <chore-progress
               .chore=${entity}
               minFillment="2"
+              warningThreashhold=${this.config.warningThreshold || 75}
             ></chore-progress>
           </div>
         </div>

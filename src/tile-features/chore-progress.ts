@@ -49,6 +49,7 @@ class TileFeatureChoreProgress extends LitElement {
       <chore-progress
         style="--height-multiplier: ${heightMultiplier}"
         .chore=${this.stateObj}
+        .warningThreashhold=${this.config.warningThreshold ?? 75}
       ></chore-progress>
     `;
   }
