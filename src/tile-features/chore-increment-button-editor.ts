@@ -6,29 +6,6 @@ import { Selector } from '@home-assistant/frontend/src/data/selector';
 
 @customElement('chore-increment-button-editor')
 class ChoreIncrementButtonEditor extends BaseEditor<ChoreIncrementButtonConfig> {
-  static styles = css`
-    .row {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .row ha-selector {
-      flex: 1;
-      margin-bottom: 0;
-    }
-
-    ha-selector:not([helper]):not(:last-child):not(.row ha-selector) {
-      display: block;
-      margin-bottom: 24px;
-    }
-
-    ha-selector[helper]:not(:last-child):not(.row ha-selector) {
-      display: block;
-      margin-bottom: 8px;
-    }
-  `;
-
   renderBody(): TemplateResult {
     return html`
       <div class="row">

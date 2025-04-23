@@ -6,7 +6,7 @@ import { ScheduledChoreEntity } from '../type';
 import { ChoreCardConfig } from './editor';
 import { HomeAssistant } from '@home-assistant/frontend/src/types';
 import './editor';
-import { fireEvent } from '@home-assistant/frontend/src/common/dom/fire_event';
+import { fireEvent, ValidHassDomEvent } from '@home-assistant/frontend/src/common/dom/fire_event';
 
 @customElement('chore-card')
 export class ChoreCard extends BaseCard<ChoreCardConfig> {
@@ -130,7 +130,7 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
       <ha-card class="${slim ? 'slim' : ''}">
         <div
           class="card-root"
-          @click=${() => fireEvent(this, 'hass-more-info', { entityId: entity.entity_id })}
+          @click=${() => fireEvent(this, 'hass-more-info' as ValidHassDomEvent, { entityId: entity.entity_id })}
           role="button"
         >
           <ha-ripple></ha-ripple>

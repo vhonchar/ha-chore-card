@@ -2,7 +2,7 @@ import { html, css, TemplateResult } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { BaseEditor } from '../base-editor';
 import { LovelaceCardConfig } from '@home-assistant/frontend/src/data/lovelace/config/card';
-import { Selector } from '@home-assistant/frontend/src/data/selector';
+import { NumberSelector, Selector } from '@home-assistant/frontend/src/data/selector';
 
 export interface ChoreCardConfig extends LovelaceCardConfig {
   entity?: string;
@@ -10,33 +10,11 @@ export interface ChoreCardConfig extends LovelaceCardConfig {
   icon?: string;
   attributesToDisplay?: string | string[];
   largerProgressBar?: boolean;
+  warningThreshold?: number;
 }
 
 @customElement('chore-card-editor')
 export class ChoreCardEditor extends BaseEditor<ChoreCardConfig> {
-  static styles = css`
-    .row {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .row ha-selector {
-      flex: 1;
-      margin-bottom: 0;
-    }
-
-    ha-selector:not([helper]):not(:last-child):not(.row ha-selector) {
-      display: block;
-      margin-bottom: 24px;
-    }
-
-    ha-selector[helper]:not(:last-child):not(.row ha-selector) {
-      display: block;
-      margin-bottom: 8px;
-    }
-  `;
-
   renderBody(): TemplateResult {
     return html`
       <ha-selector
@@ -89,6 +67,23 @@ export class ChoreCardEditor extends BaseEditor<ChoreCardConfig> {
         .value=${this.config.attributesToDisplay}
         name="attributesToDisplay"
         @value-changed=${this._valueChanged}
+      ></ha-selector>
+      <ha-selector
+        label="Warning threshold"
+        .hass="${this.hass}"
+        .selector="${{
+          number: {
+            min: 1,
+            max: 99,
+            step: 1,
+            mode: 'slider',
+            unit_of_measurement: '%',
+            slider_ticks: true,
+          },
+        } as NumberSelector}"
+        .value="${this.config.warningThreshold ?? 75}"
+        .name="${'warningThreshold'}"
+        @value-changed="${this._valueChanged}"
       ></ha-selector>
       <ha-selector
         label="Larger progress bar"
