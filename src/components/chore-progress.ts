@@ -1,7 +1,9 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { CounterChoreEntity, isScheduledChore, ScheduledChoreEntity } from '../type';
+import { HomeAssistant } from '@home-assistant/frontend/src/types';
+import { toDate, toZonedTime } from 'date-fns-tz';
 
 /**
  * A reusable progress bar component for chore tracking.
@@ -77,8 +79,21 @@ export class ChoreProgress extends LitElement {
    */
   @property({ type: Number }) warningThreashhold = 75;
 
+  /**
+   * Home Assistant object — required
+   *
+   * @type {HomeAssistant}
+   */
+  @property({ attribute: false }) hass!: HomeAssistant;
+
+  protected updated(changedProperties: PropertyValues): void {
+    if (!this.hass && !changedProperties.get('hass')) {
+      throw new Error('hass is required');
+    }
+  }
+
   render() {
-    const progress = isScheduledChore(this.chore) ? calculateSheduledChoreProgress(this.chore) : calculateCounterChoreProgress(this.chore);
+    const progress = isScheduledChore(this.chore) ? this.calculateSheduledChoreProgress(this.chore) : calculateCounterChoreProgress(this.chore);
     const widthPercentage = Math.max(this.minFillment, progress);
     const statusClass = progress >= 100 ? 'overdue' : progress > this.warningThreashhold ? 'warning' : 'good';
 
@@ -101,27 +116,23 @@ export class ChoreProgress extends LitElement {
       </div>
     `;
   }
+
+  private calculateSheduledChoreProgress(scheduledChore: ScheduledChoreEntity) {
+    const haTimeZone = this.hass.config.time_zone;
+
+    const today = toZonedTime(new Date(), haTimeZone);
+    const lastCompletion = toDate(scheduledChore.attributes.last_completion_date, { timeZone: haTimeZone });
+    const due = toDate(scheduledChore.attributes.next_due_date, { timeZone: haTimeZone });
+
+    if (due <= lastCompletion) return 1;
+
+    const total = due.getTime() - lastCompletion.getTime();
+    const elapsed = today.getTime() - lastCompletion.getTime();
+
+    const rawProgress = elapsed / total;
+    return Math.min(1, Math.max(0, rawProgress)) * 100;
+  }
 }
-
-/**
- * Calculate the progress percentage for a scheduled chore.
- *
- * @param {ScheduledChoreEntity} scheduledChore - The scheduled chore entity
- * @returns {number} Progress persentage
- */
-const calculateSheduledChoreProgress = (scheduledChore: ScheduledChoreEntity) => {
-  const today = new Date();
-  const start = new Date(scheduledChore.attributes.last_completion_date);
-  const due = new Date(scheduledChore.attributes.next_due_date);
-
-  if (due <= start) return 1;
-
-  const total = due.getTime() - start.getTime();
-  const elapsed = today.getTime() - start.getTime();
-
-  const rawProgress = elapsed / total;
-  return Math.min(1, Math.max(0, rawProgress)) * 100;
-};
 
 /**
  * Calculate the progress percentage for a counter-based chore.

@@ -140,6 +140,7 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
 
           <div class="progress-container ${this.config.largerProgressBar ? 'large' : ''}">
             <chore-progress
+              .hass=${this.hass}
               .chore=${entity}
               minFillment="2"
               warningThreashhold=${this.config.warningThreshold || 75}

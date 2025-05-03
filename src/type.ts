@@ -1,5 +1,15 @@
 import { HassEntity, HassEntityAttributeBase } from 'home-assistant-js-websocket';
 
+/**
+ * HomeAssistant specific types
+ */
+declare global {
+  interface Window {
+    customCards?: any[];
+    customCardFeatures?: any[];
+  }
+}
+
 export interface ScheduledChoreEntity extends HassEntity {
   attributes: HassEntityAttributeBase & {
     last_completion_date: string;
