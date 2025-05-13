@@ -45,14 +45,13 @@ jobs:
 
       - name: Set artifact name output
         id: set-artifact-name
-        run: echo "artifact=main.js" >> $GITHUB_OUTPUT
+        run: echo "artifact=dist" >> $GITHUB_OUTPUT
 
       - name: Upload version file
         uses: actions/upload-artifact@v4
-        if: github.ref_name == 'main'
         with:
           name: ${{ steps.set-artifact-name.outputs.artifact }}
-          path: dist/main.js
+          path: dist/*
           retention-days: '1'
           if-no-files-found: error
           overwrite: true
