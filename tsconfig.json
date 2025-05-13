@@ -4,11 +4,7 @@
     "target": "es2020",
     "module": "esnext",
     "moduleResolution": "node",
-    "lib": [
-      "es2017",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["es2017", "dom", "dom.iterable"],
     "noEmit": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
@@ -20,5 +16,5 @@
     "experimentalDecorators": true,
     "allowJs": true,
     "esModuleInterop": true
-  },
+  }
 }

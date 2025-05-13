@@ -7,20 +7,13 @@
   "forwardPorts": [5000],
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/ha-chore-card,type=bind",
   "workspaceFolder": "/workspace/ha-chore-card",
-  "mounts": [
-    "source=${env:USERPROFILE}\\.gitconfig,target=/home/root/.gitconfig,type=bind"
-  ],
+  "mounts": ["source=${env:USERPROFILE}\\.gitconfig,target=/home/root/.gitconfig,type=bind"],
   "remoteEnv": {
     "NODE_OPTIONS": "--max_old_space_size=1024"
   },
   "customizations": {
     "vscode": {
-      "extensions": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "ms-vscode.vscode-typescript-next",
-        "runem.lit-plugin"
-      ],
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "ms-vscode.vscode-typescript-next", "runem.lit-plugin"],
       "settings": {
         "files.eol": "\n",
         "editor.tabSize": 2,

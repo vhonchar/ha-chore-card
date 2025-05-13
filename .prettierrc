@@ -8,6 +8,5 @@
   "trailingComma": "all",
   "endOfLine": "lf",
   "embeddedLanguageFormatting": "auto",
-  "singleAttributePerLine": true,
-  "xmlSortAttributesByKey": true
+  "singleAttributePerLine": true
 }
