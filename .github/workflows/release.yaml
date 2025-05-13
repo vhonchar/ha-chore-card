@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Test & Build
+    uses: ./.github/workflows/build.yaml
+
+  validate-version:
+    name: Validate version
+    uses: ./.github/workflows/validate_version.yaml
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs:
+      - build
+      - validate-version
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build-job.outputs.artifact }}
+          path: dist
+
+      - name: Install tools
+        run: |
+          ls -la dist
+          sudo apt-get update && sudo apt-get install -y jq
+          chmod +x ./bin/*
+          gh --version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Create Release
+      #   run: |
+      #     tag=$(./bin/version.sh)
+      #     gh release create "$tag" \
+      #         --generate-notes \
+      #         --prerelease
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
