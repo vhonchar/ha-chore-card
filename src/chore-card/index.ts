@@ -6,7 +6,6 @@ import { ScheduledChoreEntity } from '../type';
 import { ChoreCardConfig } from './editor';
 import { HomeAssistant } from '@home-assistant/frontend/src/types';
 import './editor';
-import { fireEvent, ValidHassDomEvent } from '@home-assistant/frontend/src/common/dom/fire_event';
 
 @customElement('chore-card')
 export class ChoreCard extends BaseCard<ChoreCardConfig> {
@@ -122,7 +121,7 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
       <ha-card class="${slim ? 'slim' : ''}">
         <div
           class="card-root"
-          @click=${() => fireEvent(this, 'hass-more-info' as ValidHassDomEvent, { entityId: entity.entity_id })}
+          @click=${() => this.fireEvent('hass-more-info', { entityId: entity.entity_id })}
           role="button"
         >
           <ha-ripple></ha-ripple>
@@ -151,47 +150,10 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
     `;
   }
 
-  _handleIncrement() {
-    const amount = this.config.increment_amount || 1;
-    this._callService('increment', amount);
-  }
-
-  _handleDecrement() {
-    const amount = this.config.decrement_amount || 1;
-    this._callService('decrement', amount);
-  }
-
-  _callService(action: string, amount: number) {
-    if (!this.hass || !this.config.entity) return;
-
-    const entityType = this.config.entity.split('.')[0];
-
-    if (entityType === 'counter') {
-      this.hass.callService('counter', action, {
-        entity_id: this.config.entity,
-      });
-    } else if (entityType === 'input_number') {
-      const currentValue = parseFloat(this.hass.states[this.config.entity].state);
-      const newValue = action === 'increment' ? currentValue + amount : currentValue - amount;
-
-      this.hass.callService('input_number', 'set_value', {
-        entity_id: this.config.entity,
-        value: newValue,
-      });
-    } else if (entityType === 'number') {
-      const currentValue = parseFloat(this.hass.states[this.config.entity].state);
-      const newValue = action === 'increment' ? currentValue + amount : currentValue - amount;
-
-      this.hass.callService('number', 'set_value', {
-        entity_id: this.config.entity,
-        value: newValue,
-      });
-    } else if (entityType === 'sensor') {
-      this.hass.callService('chore', action, {
-        entity_id: this.config.entity,
-        [action === 'increment' ? 'increment' : 'decrement']: amount,
-      });
-    }
+  private fireEvent(type: string, detail: Record<string, any>) {
+    const event = new Event(type);
+    (event as any).detail = detail;
+    this.dispatchEvent(event);
   }
 }
 
