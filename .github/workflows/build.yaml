@@ -1,0 +1,57 @@
+name: Test & Build
+
+on:
+  workflow_call:
+    outputs:
+      artifact:
+        description: 'Name of the artifact built'
+        value: ${{ jobs.build.outputs.artifact }}
+  pull_request:
+    branches:
+      - main
+
+permissions: {}
+
+jobs:
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      - name: Check formatting with Prettier
+        run: npx prettier --check .
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'latest'
+
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+
+      - name: Set artifact name output
+        id: set-artifact-name
+        run: echo "artifact=dist" >> $GITHUB_OUTPUT
+
+      - name: Upload version file
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.set-artifact-name.outputs.artifact }}
+          path: dist/*
+          retention-days: '1'
+          if-no-files-found: error
+          overwrite: true

@@ -1,0 +1,12 @@
+{
+  "printWidth": 180,
+  "useTabs": false,
+  "tabWidth": 2,
+  "singleQuote": true,
+  "semi": true,
+  "quoteProps": "consistent",
+  "trailingComma": "all",
+  "endOfLine": "lf",
+  "embeddedLanguageFormatting": "auto",
+  "singleAttributePerLine": true
+}
