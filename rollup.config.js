@@ -10,6 +10,7 @@ export default {
     file: 'dist/chore-card.js',
     format: 'es',
   },
+  external: (id) => id.startsWith('@home-assistant/frontend'),
   plugins: [
     resolve({
       browser: true,
