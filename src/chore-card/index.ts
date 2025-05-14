@@ -15,7 +15,7 @@ export class ChoreCard extends BaseCard<ChoreCardConfig> {
       border-radius: var(--ha-card-border-radius, 12px);
       box-sizing: border-box;
       color: var(--primary-text-color);
-      background: var(--card-background-color, white);
+      background: var(--ha-card-background, var(--card-background-color, #fff));
     }
 
     .card-root {
