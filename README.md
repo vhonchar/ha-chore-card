@@ -17,9 +17,9 @@ A custom Lovelace card for Home Assistant that visually represents the progress 
 
 ## 💡 Features
 
-* 🧩 Custom chore card for Lovelace UI with a small progress bar
-* 📋 Chore-specific enhancements for the [Tile card](https://www.home-assistant.io/dashboards/tile/)
-* ⚙️ No YAML needed — configure everything through the UI
+- 🧩 Custom chore card for Lovelace UI with a small progress bar
+- 📋 Chore-specific enhancements for the [Tile card](https://www.home-assistant.io/dashboards/tile/)
+- ⚙️ No YAML needed — configure everything through the UI
 
 ---
 
@@ -32,6 +32,7 @@ A custom Lovelace card for Home Assistant that visually represents the progress 
 
    1. URL: `https://github.com/vhonchar/ha-chore-card`
    2. Type: **Dashboard**
+
 3. Click Add
 4. Install the **Chore Helper Card** from list of available repos
 
@@ -56,9 +57,9 @@ After installation, you can add the card to your dashboard via UI:
 
 ## 🔧 Troubleshooting
 
-* Ensure both the [ha-chore](https://github.com/vhonchar/ha-chore) integration and this card are installed correctly
-* Clear your browser cache if the card doesn't appear as expected
-* Check the browser console for any errors related to the card
+- Ensure both the [ha-chore](https://github.com/vhonchar/ha-chore) integration and this card are installed correctly
+- Clear your browser cache if the card doesn't appear as expected
+- Check the browser console for any errors related to the card
 
 ---
 
