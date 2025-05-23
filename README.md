@@ -1,7 +1,7 @@
 # 🧼 Chore Helper Card
 
 ![Latest Release](https://img.shields.io/github/v/release/vhonchar/ha-chore-card?style=for-the-badge)
-[![License](https://img.shields.io/github/license/vhonchar/ha-chore-card?style=for-the-badge)](./LICENSE)
+[![License](https://img.shields.io/github/license/vhonchar/ha-chore-card?style=for-the-badge)](https://github.com/vhonchar/ha-chore-card/blob/main/LICENSE)
 [![Issues](https://img.shields.io/github/issues/vhonchar/ha-chore-card?style=for-the-badge)](https://github.com/vhonchar/ha-chore-card/issues)
 [![Maintained by vhonchar](https://img.shields.io/badge/maintained%20by-vhonchar-blueviolet?style=for-the-badge)](https://github.com/vhonchar)
 [![HACS](https://img.shields.io/badge/HACS-Custom-blue?style=for-the-badge)](https://hacs.xyz)
